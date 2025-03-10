@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-  # Banco de Dados PostgreSQL
   postgres:
     image: postgres:15
     container_name: postgres_container
@@ -15,7 +14,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  # Mensageria RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq_container
@@ -25,9 +23,8 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     ports:
       - "5672:5672"
-      - "15672:15672" # Painel de administração do RabbitMQ
+      - "15672:15672"
 
-  # Prometheus para monitoramento
   prometheus:
     image: prom/prometheus
     container_name: prometheus_container
@@ -37,7 +34,6 @@ services:
     ports:
       - "9090:9090"
 
-  # Grafana para visualização
   grafana:
     image: grafana/grafana
     container_name: grafana_container
@@ -47,7 +43,6 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
 
-  # API Spring Boot rodando no Docker
   order-api:
     image: order-api:latest # Nome da imagem da API (precisa ser criada)
     container_name: order_api_container

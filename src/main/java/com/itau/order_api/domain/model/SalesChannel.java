@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum SalesChannel {
-    MOBILE,      // Compra via App
-    WEBSITE,     // Compra via Site
-    WHATSAPP,    // Compra via WhatsApp
-    CALL_CENTER;  // Compra via Call Center
+    MOBILE,
+    WEBSITE,
+    WHATSAPP,
+    CALL_CENTER;
 
     public static SalesChannel fromString(String value) {
         for (SalesChannel channel : values()) {
@@ -15,6 +15,6 @@ public enum SalesChannel {
                 return channel;
             }
         }
-        throw new IllegalArgumentException("SalesChannel inválido: " + value);
+        throw new IllegalArgumentException("Invalid SalesChannel: " + value);
     }
 }

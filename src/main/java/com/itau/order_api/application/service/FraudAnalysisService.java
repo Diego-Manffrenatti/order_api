@@ -27,7 +27,7 @@ public class FraudAnalysisService {
             ResponseEntity<FraudAnalysisResponse> response = restTemplate.getForEntity(url, FraudAnalysisResponse.class);
             return response.getBody();
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao consultar API de Fraude", e);
+            throw new RuntimeException("Failed to query Fraud API", e);
         }
     }
 }

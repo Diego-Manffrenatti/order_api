@@ -16,10 +16,10 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class) // JUnit 5 Runner para Mockito
+@ExtendWith(MockitoExtension.class)
 public class OrderServiceTest {
 
-    @Mock // 🔥 Aqui estamos mockando a interface corretamente!
+    @Mock
     private OrderService orderService;
 
     private OrderRequest mockOrderRequest;
@@ -54,18 +54,14 @@ public class OrderServiceTest {
 
     @Test
     void testCreateOrder() {
-        // 🔥 Mockando corretamente o comportamento da interface
         when(orderService.createOrder(any(OrderRequest.class))).thenReturn(mockOrderResponse);
 
-        // Executando o teste
         OrderResponse response = orderService.createOrder(mockOrderRequest);
 
-        // Validando resposta
         assertEquals(mockOrderResponse.customerId(), response.customerId());
         assertEquals(mockOrderResponse.productId(), response.productId());
         assertEquals(mockOrderResponse.status(), response.status());
 
-        // Verificando a interação
         verify(orderService, times(1)).createOrder(mockOrderRequest);
     }
 }

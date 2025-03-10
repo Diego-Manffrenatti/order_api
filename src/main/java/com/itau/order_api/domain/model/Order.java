@@ -23,7 +23,7 @@ public class Order {
     @Column(nullable = false, unique = true)
     private String orderNumber;
 
-    @Column(nullable = false)
+    @Column(name = "customer_id", nullable = false)
     private UUID customerId;
 
     @Column(nullable = false)
@@ -66,4 +66,7 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderHistory> history;
+
+    public Order(UUID uuid, OrderStatus orderStatus) {
+    }
 }

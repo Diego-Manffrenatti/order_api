@@ -15,7 +15,7 @@ public record OrderResponse(
         String paymentMethod,
         BigDecimal totalMonthlyPremiumAmount,
         BigDecimal insuredAmount,
-        Map<String, BigDecimal> coverages,  // ✅ Agora `coverages` é um `Map<String, BigDecimal>`
+        Map<String, BigDecimal> coverages,
         List<String> assistances,
         String status,
         LocalDateTime createdAt,

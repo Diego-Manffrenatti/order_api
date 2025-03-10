@@ -43,7 +43,6 @@ public class OrderControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Configuração do MockMvc para testar o controlador isoladamente
         mockMvc = MockMvcBuilders.standaloneSetup(orderController).build();
 
         UUID orderId = UUID.randomUUID();
@@ -66,18 +65,15 @@ public class OrderControllerTest {
 
     @Test
     void testCreateOrder() throws Exception {
-        // 🔥 Mockando a resposta do serviço
         when(orderService.createOrder(any(OrderRequest.class))).thenReturn(mockOrderResponse);
 
-        // 🔥 Simulando uma requisição POST para criar um pedido
         mockMvc.perform(post("/api/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(mockOrderRequest)))
-                .andExpect(status().isOk()) // Valida se o status da resposta é 200
-                .andExpect(jsonPath("$.customerId").value(mockOrderResponse.customerId().toString())) // Ajuste no JSONPath
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.customerId").value(mockOrderResponse.customerId().toString()))
                 .andExpect(jsonPath("$.status").value("RECEIVED"));
 
-        // 🔥 Verificando se o serviço foi chamado uma vez com qualquer `OrderRequest`
         verify(orderService, times(1)).createOrder(any(OrderRequest.class));
     }
 }
