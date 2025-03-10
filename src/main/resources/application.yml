@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/order_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  rabbitmq:
+    host: rabbitmq_container
+    port: 5672
+    username: guest
+    password: guest
+
+  application:
+    name: order-api
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,info"
+  tracing:
+    sampling:
+      probability: 1.0
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+rabbitmq:
+  exchange:
+    name: ${RABBITMQ_EXCHANGE_NAME:order-exchange}
+  queues:
+    external:
+      payment-approved: payment-approved-queue
+      order-cancelled: order-cancelled-queue
+    name: ${RABBITMQ_QUEUE_NAME:order-queue}
+  routing:
+    key: ${RABBITMQ_ROUTING_KEY:order-routing-key}
+
+fraud:
+  api:
+    url: http://localhost:8080/mock-fraud-analysis

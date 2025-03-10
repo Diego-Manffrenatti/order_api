@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:14:///testdb  # Usa Testcontainers, mas será mockado
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    username: test
+    password: test
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none  # Nenhuma operação no banco (pois será mockado)
+    properties:
+      hibernate:
+        show_sql: false  # Não precisa logar SQL, pois não há queries reais
+        format_sql: false
+  sql:
+    init:
+      mode: never  # Não inicializa scripts SQL

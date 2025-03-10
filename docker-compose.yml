@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  # Banco de Dados PostgreSQL
+  postgres:
+    image: postgres:15
+    container_name: postgres_container
+    restart: always
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Mensageria RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_container
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672" # Painel de administração do RabbitMQ
+
+  # Prometheus para monitoramento
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus_container
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+  # Grafana para visualização
+  grafana:
+    image: grafana/grafana
+    container_name: grafana_container
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+  # API Spring Boot rodando no Docker
+  order-api:
+    image: order-api:latest # Nome da imagem da API (precisa ser criada)
+    container_name: order_api_container
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/order_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      RABBITMQ_EXCHANGE_NAME: order-exchange
+      RABBITMQ_QUEUE_NAME: order-queue
+      RABBITMQ_PAYMENT_QUEUE: payment-approved
+      RABBITMQ_CANCELLED_QUEUE: order-cancelled-queue
+      RABBITMQ_ROUTING_KEY: order-routing-key
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - rabbitmq
+      - prometheus
+      - grafana
+
+volumes:
+  postgres_data:
+  grafana_data:
